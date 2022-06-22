@@ -20,6 +20,11 @@ app.get('/api/owners/total', (req, res) => {
   db.query(sql).then(dbRes => res.json(dbRes.rows))
 })
 
+app.get('/api/stats', (req, res) => {
+  const sql = `SELECT owner, count(*) FROM petrol_stations GROUP BY owner;`
+  db.query(sql).then(dbRes => res.json(dbRes.rows))
+})
+
 app.get('/api/stations/all', (req, res) => {
   let sql = 'SELECT * FROM petrol_stations ORDER BY petrol_stations ASC LIMIT 300;'
   db.query(sql).then(dbRes => res.json(dbRes.rows))

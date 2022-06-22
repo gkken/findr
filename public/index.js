@@ -90,7 +90,7 @@ axios.get('/api/stations/all').then(res => {
   }
 
   for (let i = 0; i < allData.length; i++) {
-    let randomData = allData[Math.floor(random(0, 5244))]
+    let randomData = allData[Math.floor(random(0, 300))]
     
     station.textContent = randomData.name
     owner.textContent = randomData.owner
