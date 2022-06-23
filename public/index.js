@@ -1,8 +1,10 @@
 const leftBar = document.querySelector('.left-bar')
 const rightBar = document.querySelector('.right-bar')
 
+let allRandomData
+
 let markers = []
-let map, infoWindow;
+let map, infoWindow, currentLocation;
 
 // close your eyes and collapse this function for your sanity
 function placeMarker(stationName, stationOwner, currentStationCoord){
@@ -25,16 +27,6 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
   }
   let pinLabel = stationOwner[0];
   let pinSVGFilled = "M 12,2 C 8.1340068,2 5,5.1340068 5,9 c 0,5.25 7,13 7,13 0,0 7,-7.75 7,-13 0,-3.8659932 -3.134007,-7 -7,-7 z";
-  let markerImage = {
-      path: pinSVGFilled,
-      anchor: new google.maps.Point(12,17),
-      fillOpacity: 1,
-      fillColor: pinColor,
-      strokeWeight: 2,
-      strokeColor: "white",
-      scale: 2,
-      labelOrigin: new google.maps.Point(12,10)
-  };
   let label = {
       text: pinLabel,
       color: "black",
@@ -44,7 +36,16 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
   const marker = new google.maps.Marker({
     position: currentStationCoord,
     map: map,
-    icon: markerImage,
+    icon: {
+      path: pinSVGFilled,
+      anchor: new google.maps.Point(12,17),
+      fillOpacity: 1,
+      fillColor: pinColor,
+      strokeWeight: 2,
+      strokeColor: "white",
+      scale: 2,
+      labelOrigin: new google.maps.Point(12,10)
+  },
     label: label
   })
   
@@ -54,19 +55,20 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
     content: contentString,
   });
   
-  marker.addListener("click", () => {
-    infowindow.open({
-      anchor: marker,
-      map,
-      shouldFocus: false,
+    marker.addListener("click", () => {
+      infowindow.open({
+        anchor: marker,
+        map,
+        shouldFocus: false,
+      });
     });
-  });
-  markers.push(marker)
-}
+    markers.push(marker)
+  }
 
-function removeAllMarkers(){
+
+function removeOutOfBoundMarkers(){
   markers.forEach(marker => {
-    marker.setMap(null)
+    if (!map.getBounds().contains(marker.getPosition())) marker.setMap(null)
   })
 }
 
@@ -76,20 +78,20 @@ function initMap() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
       currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
+      
       map = new google.maps.Map(document.getElementById("map"), {
         center: currentLocation,
         zoom: 13,
         minZoom: 11,
       });
-      
+
       let currenLocDiv = document.createElement('div')
       let titleCl = document.createElement('h2')
       let inputLat = document.createElement('input')
       let inputLong = document.createElement('input')
       let labelLat = document.createElement('label')
       let labelLong = document.createElement('label')
-
+      
       currenLocDiv.className = 'Current-loc'
       titleCl.textContent = 'Current Location'
       labelLat.textContent = 'Latitude'
@@ -102,9 +104,9 @@ function initMap() {
       currenLocDiv.appendChild(inputLat)
       currenLocDiv.appendChild(labelLong)
       currenLocDiv.appendChild(inputLong)
-
+      
       map.addListener("dragend", () => {
-        removeAllMarkers()
+        removeOutOfBoundMarkers(map)
 
         axios.get('/api/stations/all').then(res =>{
           res.data.forEach(station => {
@@ -113,32 +115,37 @@ function initMap() {
             let stationName = station.name
             let stationOwner = station.owner
             let currentStationCoord = { lat: lat, lng: long}
-          
-            placeMarker(stationName, stationOwner, currentStationCoord)
-          })
-        })
-      })
-
-      map.addListener('zoom_changed', () => {
-        removeAllMarkers()
-
-        axios.get('/api/stations/all').then(res =>{
-          res.data.forEach(station => {
-            let lat = station.lat
-            let long = station.long
-            let stationName = station.name
-            let stationOwner = station.owner
-            let currentStationCoord = { lat: lat, lng: long}
+            let googleCoord = new google.maps.LatLng(currentStationCoord)
             
-            placeMarker(stationName, stationOwner, currentStationCoord)
+            if (map.getBounds().contains(googleCoord)){
+              placeMarker(stationName, stationOwner, currentStationCoord)
+            } 
           })
         })
       })
+      
+      map.addListener('zoom_changed', () => {
+        removeOutOfBoundMarkers(map)
+
+        axios.get('/api/stations/all').then(res =>{
+          res.data.forEach(station => {
+            let lat = station.lat
+            let long = station.long
+            let stationName = station.name
+            let stationOwner = station.owner
+            let currentStationCoord = { lat: lat, lng: long}
+            let googleCoord = new google.maps.LatLng(currentStationCoord)
+            
+            if (map.getBounds().contains(googleCoord)){
+              placeMarker(stationName, stationOwner, currentStationCoord)
+            } 
+          })
+        })
+      })
+
     })
   }
 }
-  
-window.initMap = initMap;
 
 axios.get('/api/stations/all').then(res =>{
   res.data.forEach(station => {
@@ -147,26 +154,28 @@ axios.get('/api/stations/all').then(res =>{
     let stationName = station.name
     let stationOwner = station.owner
     let currentStationCoord = { lat: lat, lng: long}
-
+    
     placeMarker(stationName, stationOwner, currentStationCoord)
   })
 })
 
-axios.get('/api/stations/random').then(res => {
-  let allData = res.data
 
+axios.get('/api/stations/random').then(res => {
+  allRandomData = res.data
+  console.log(allRandomData);
   let spotlightContainerDiv = document.createElement('div')
   let title = document.createElement('h1')
   let refreshLink = document.createElement('a')
-  let station = document.createElement('p')
+  let station = document.createElement('a')
   let owner = document.createElement('p')
 
+  station.setAttribute('href', 'javascript:handleLink()')
   refreshLink.setAttribute('href', '/')
 
   title.textContent = 'spotlight'
   refreshLink.textContent = 'refresh'
-  station.textContent = allData.name
-  owner.textContent = allData.owner
+  station.textContent = allRandomData.name
+  owner.textContent = allRandomData.owner
 
   spotlightContainerDiv.appendChild(title)
   spotlightContainerDiv.appendChild(station)
@@ -175,6 +184,13 @@ axios.get('/api/stations/random').then(res => {
   leftBar.appendChild(spotlightContainerDiv)
 
 })
+
+function handleLink() {
+  currentLocation = new google.maps.LatLng(allRandomData.lat, allRandomData.long)
+
+  map.setCenter(currentLocation) 
+}
+
 
 axios.get('/api/owners/total').then(res => {
   let allData = res.data
@@ -187,7 +203,6 @@ axios.get('/api/owners/total').then(res => {
   let ownersTable = document.createElement('table')
   let totalOwners = document.createElement('div')
 
-
   title1.textContent = 'stats'
   subHeader.textContent = 'total stations'
   title2.textContent = 'breakdown by owners'
@@ -195,27 +210,30 @@ axios.get('/api/owners/total').then(res => {
   allData.forEach(data => {
 
     let totalCountOfOwners = total += Number(data.count)
-
-    let column = document.createElement('tr')
-    let ownerRow = document.createElement('td')
-    let countRow = document.createElement('td')
-
     totalOwners.textContent = totalCountOfOwners
-    ownerRow.textContent = data.owner
-    countRow.textContent = data.count
 
-    leftBar.appendChild(statsContainerDiv)
-    statsContainerDiv.appendChild(title1)
-    statsContainerDiv.appendChild(subHeader)
-    statsContainerDiv.appendChild(totalOwners)
-    statsContainerDiv.appendChild(title2)
-    statsContainerDiv.appendChild(ownersTable)
-    ownersTable.appendChild(column)
-    column.appendChild(ownerRow)
-    column.appendChild(countRow)
+    if (data.count > 1) {
+      
+      let column = document.createElement('tr')
+      let ownerRow = document.createElement('td')
+      let countRow = document.createElement('td')
+  
+      ownerRow.textContent = data.owner
+      countRow.textContent = data.count
+  
+      leftBar.appendChild(statsContainerDiv)
+      statsContainerDiv.appendChild(title1)
+      statsContainerDiv.appendChild(subHeader)
+      statsContainerDiv.appendChild(totalOwners)
+      statsContainerDiv.appendChild(title2)
+      statsContainerDiv.appendChild(ownersTable)
+      ownersTable.appendChild(column)
+      column.appendChild(ownerRow)
+      column.appendChild(countRow)
+    }
   })
-
 })
+
 
 axios.get('/api/stations/all').then(res => {
   let allData = res.data

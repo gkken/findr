@@ -5,8 +5,8 @@ const port = 8080
 
 db = new Pool({
   user: 'postgres',
-  database: 'findr', //change back to test1
-  password: process.env.DATABASE_PASSWORD
+  database: 'findr', 
+  password: '' //change password
 })
 
 app.use(express.static('public'))
@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/owners/total', (req, res) => {
-  const sql = `SELECT owner, count(*) FROM petrol_stations GROUP BY owner;`
+  const sql = `SELECT owner, count(*) FROM petrol_stations GROUP BY owner ORDER BY count DESC;`
   db.query(sql).then(dbRes => res.json(dbRes.rows))
 })
 
