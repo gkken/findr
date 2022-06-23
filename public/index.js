@@ -7,9 +7,9 @@ let markers = []
 let map, infoWindow, currentLocation;
 
 // close your eyes and collapse this function for your sanity
-function placeMarker(stationName, stationOwner, currentStationCoord){
+function placeMarker(stationName, stationOwner, currentStationCoord) {
   let pinColor
-  switch(stationOwner[0]){
+  switch (stationOwner[0]) {
     case 'C':
       pinColor = '#ff0000';
       break;
@@ -27,11 +27,24 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
   }
   let pinLabel = stationOwner[0];
   let pinSVGFilled = "M 12,2 C 8.1340068,2 5,5.1340068 5,9 c 0,5.25 7,13 7,13 0,0 7,-7.75 7,-13 0,-3.8659932 -3.134007,-7 -7,-7 z";
+<<<<<<< HEAD
+=======
+  let markerImage = {
+    path: pinSVGFilled,
+    anchor: new google.maps.Point(12, 17),
+    fillOpacity: 1,
+    fillColor: pinColor,
+    strokeWeight: 2,
+    strokeColor: "white",
+    scale: 2,
+    labelOrigin: new google.maps.Point(12, 10)
+  };
+>>>>>>> nearest stations
   let label = {
-      text: pinLabel,
-      color: "black",
-      fontSize: "13px",
-      fontWeight: '900'
+    text: pinLabel,
+    color: "black",
+    fontSize: "13px",
+    fontWeight: '900'
   };
   const marker = new google.maps.Marker({
     position: currentStationCoord,
@@ -48,12 +61,13 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
   },
     label: label
   })
-  
+
   const contentString = `<h1>${stationName}</h1>` + `<p>${stationOwner}</p>`
 
   const infowindow = new google.maps.InfoWindow({
     content: contentString,
   });
+<<<<<<< HEAD
   
     marker.addListener("click", () => {
       infowindow.open({
@@ -61,14 +75,56 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
         map,
         shouldFocus: false,
       });
+=======
+
+  marker.addListener("click", () => {
+    infowindow.open({
+      anchor: marker,
+      map,
+      shouldFocus: false,
+>>>>>>> nearest stations
     });
     markers.push(marker)
   }
 
 
+<<<<<<< HEAD
 function removeOutOfBoundMarkers(){
+=======
+function removeAllMarkers() {
+>>>>>>> nearest stations
   markers.forEach(marker => {
     if (!map.getBounds().contains(marker.getPosition())) marker.setMap(null)
+  })
+}
+
+function renderNearest(nearestStation) {
+  return `
+  <div class="nearest-station" data-id="${nearestStation.id}">
+      <h4>${nearestStation.name}</h4>
+      <p>${nearestStation.street_add}</p>
+      <p>${nearestStation.city}</p>
+  </div>
+  `
+}
+
+function renderNearest5(nearestStations) {
+  let nearest5Stations = []
+
+  for (let i = 0; i <= 5; i++) {
+    nearest5Stations.push(nearestStations[i])
+  }
+  return nearest5Stations.map(renderNearest).join('')
+}
+
+function updateNearestStations() {
+  let centerLat = map.center.lat()
+  let centerLong = map.center.lng()
+
+  axios.get(`/api/stations/nearest?lat=${centerLat}&long=${centerLong}&rad=5`).then(res => {
+    let nearestStations = res.data
+
+    rightBar.innerHTML = renderNearest5(nearestStations)
   })
 }
 
@@ -106,39 +162,62 @@ function initMap() {
       currenLocDiv.appendChild(inputLong)
       
       map.addListener("dragend", () => {
+<<<<<<< HEAD
         removeOutOfBoundMarkers(map)
+=======
 
-        axios.get('/api/stations/all').then(res =>{
+        removeAllMarkers()
+        updateNearestStations()
+>>>>>>> nearest stations
+
+        axios.get('/api/stations/all').then(res => {
           res.data.forEach(station => {
             let lat = station.lat
             let long = station.long
             let stationName = station.name
             let stationOwner = station.owner
+<<<<<<< HEAD
             let currentStationCoord = { lat: lat, lng: long}
             let googleCoord = new google.maps.LatLng(currentStationCoord)
             
             if (map.getBounds().contains(googleCoord)){
               placeMarker(stationName, stationOwner, currentStationCoord)
             } 
+=======
+            let currentStationCoord = { lat: lat, lng: long }
+
+            placeMarker(stationName, stationOwner, currentStationCoord)
+>>>>>>> nearest stations
           })
         })
       })
       
       map.addListener('zoom_changed', () => {
+<<<<<<< HEAD
         removeOutOfBoundMarkers(map)
+=======
 
-        axios.get('/api/stations/all').then(res =>{
+        removeAllMarkers()
+>>>>>>> nearest stations
+
+        axios.get('/api/stations/all').then(res => {
           res.data.forEach(station => {
             let lat = station.lat
             let long = station.long
             let stationName = station.name
             let stationOwner = station.owner
+<<<<<<< HEAD
             let currentStationCoord = { lat: lat, lng: long}
             let googleCoord = new google.maps.LatLng(currentStationCoord)
             
             if (map.getBounds().contains(googleCoord)){
               placeMarker(stationName, stationOwner, currentStationCoord)
             } 
+=======
+            let currentStationCoord = { lat: lat, lng: long }
+
+            placeMarker(stationName, stationOwner, currentStationCoord)
+>>>>>>> nearest stations
           })
         })
       })
@@ -146,19 +225,30 @@ function initMap() {
     })
   }
 }
+<<<<<<< HEAD
+=======
 
-axios.get('/api/stations/all').then(res =>{
+window.initMap = initMap;
+>>>>>>> nearest stations
+
+axios.get('/api/stations/all').then(res => {
   res.data.forEach(station => {
     let lat = station.lat
     let long = station.long
     let stationName = station.name
     let stationOwner = station.owner
+<<<<<<< HEAD
     let currentStationCoord = { lat: lat, lng: long}
     
+=======
+    let currentStationCoord = { lat: lat, lng: long }
+
+>>>>>>> nearest stations
     placeMarker(stationName, stationOwner, currentStationCoord)
   })
 })
 
+<<<<<<< HEAD
 
 axios.get('/api/stations/random').then(res => {
   allRandomData = res.data
@@ -192,6 +282,8 @@ function handleLink() {
 }
 
 
+=======
+>>>>>>> nearest stations
 axios.get('/api/owners/total').then(res => {
   let allData = res.data
   let total = 0
@@ -238,33 +330,38 @@ axios.get('/api/owners/total').then(res => {
 axios.get('/api/stations/all').then(res => {
   let allData = res.data
 
-/////////// Nearest 5 stations section
-  let nearestSection = document.createElement('section')
-  let nearestTitle = document.createElement('h1')
+  let spotlightContainerDiv = document.createElement('div')
+  let title = document.createElement('h1')
+  let refreshLink = document.createElement('a')
+  let station = document.createElement('p')
+  let owner = document.createElement('p')
 
-  nearestSection.className = 'nearest_5'
-  nearestTitle.textContent = 'nearest 5'
-  
-  rightBar.appendChild(nearestSection)
-  nearestSection.appendChild(nearestTitle)
-  
-// loop through 5 stations
-  for (let i = 0; i <= 5; i++) {
-    let stationDiv = document.createElement('div')
-    let stationName = document.createElement('h4')
-    let stationAdd = document.createElement('p')
-    let stationCity = document.createElement('p')
-    
-    allData.forEach(database => {
-      stationName.textContent = allData[i].name
-      stationAdd.textContent = allData[i].street_add
-      stationCity.textContent = allData[i].city
-    })
+  refreshLink.setAttribute('href', '/')
 
-    nearestSection.appendChild(stationDiv)
-    stationDiv.appendChild(stationName)
-    stationDiv.appendChild(stationAdd)
-    stationDiv.appendChild(stationCity)
+  title.textContent = 'spotlight'
+  refreshLink.textContent = 'refresh'
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min
   }
+
+  for (let i = 0; i < allData.length; i++) {
+    let randomData = allData[Math.floor(random(0, 300))]
+
+    station.textContent = randomData.name
+    owner.textContent = randomData.owner
+
+  }
+
+  spotlightContainerDiv.appendChild(title)
+  spotlightContainerDiv.appendChild(station)
+  spotlightContainerDiv.appendChild(owner)
+  spotlightContainerDiv.appendChild(refreshLink)
+  leftBar.appendChild(spotlightContainerDiv)
+
+
 })
+
+
+
 
