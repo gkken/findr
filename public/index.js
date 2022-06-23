@@ -14,6 +14,7 @@ const nearestSection = document.querySelector('.nearest-section')
 
 let allRandomData
 let markers = []
+
 let map, infoWindow, currentLocation;
 
 // close your eyes and collapse this function for your sanity
@@ -160,7 +161,6 @@ function isWithinBounds(coord){
 }
 
 function initMap() {
-  // to test set sensor location to anywhere
   // you can manage locations and add Melbourne lat: -37.8183, lng: 144.9671, timezone: Australia/Melbourne, locale: en-GB
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -265,6 +265,65 @@ axios.get('/api/owners/total').then(res => {
 
     let totalCountOfOwners = total += Number(data.count)
     totalOwners.textContent = totalCountOfOwners
+    ownerRow.textContent = data.owner
+    countRow.textContent = data.count
+
+    leftBar.appendChild(statsContainerDiv)
+    statsContainerDiv.appendChild(title1)
+    statsContainerDiv.appendChild(subHeader)
+    statsContainerDiv.appendChild(totalOwners)
+    statsContainerDiv.appendChild(title2)
+    statsContainerDiv.appendChild(ownersTable)
+    ownersTable.appendChild(column)
+    column.appendChild(ownerRow)
+    column.appendChild(countRow)
+  })
+  
+})
+
+  // CURRENT LOCATION
+  
+  function currentLoc() {
+
+    let currenLocDiv = document.createElement('div')
+    let titleCl = document.createElement('h2')
+    let inputLat = document.createElement('input')
+    let inputLong = document.createElement('input')
+    let labelLat = document.createElement('label')
+    let labelLong = document.createElement('label')
+    
+    let addressTitle = document.createElement('h2')
+    let addressDetail = document.createElement('p')
+    addressTitle.textContent = 'Address'
+    addressDetail.textContent
+    
+    currenLocDiv.className = 'Current-loc'
+    titleCl.textContent = 'Current Location'
+    labelLat.textContent = 'Latitude'
+    labelLong.textContent = 'Longitude'
+    inputLat.value = currentLocation.lat()
+    inputLong.value = currentLocation.lng()
+    console.log(currentLocation.lat())
+    
+    rightBar.appendChild(currenLocDiv)
+    currenLocDiv.appendChild(titleCl)
+    currenLocDiv.appendChild(labelLat)
+    currenLocDiv.appendChild(inputLat)
+    currenLocDiv.appendChild(labelLong)
+    currenLocDiv.appendChild(inputLong)
+
+  
+  }
+
+
+
+
+axios.get('/api/stations/all').then(res => {
+  let allData = res.data
+
+/////////// Nearest 5 stations section
+  let nearestSection = document.createElement('section')
+  let nearestTitle = document.createElement('h1')
 
     if (data.count > 1) {
       
@@ -288,7 +347,7 @@ axios.get('/api/owners/total').then(res => {
       column.appendChild(countRow)
     }
   })
-})
+
 
 
 function placeNearestMarkers(currentLocation){
