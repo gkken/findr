@@ -78,8 +78,18 @@ function placeMarker(stationName, stationOwner, currentStationCoord) {
 
 
 function removeOutOfBoundMarkers(){
-  markers.forEach(marker => {
-    if (!map.getBounds().contains(marker.getPosition())) marker.setMap(null)
+  for (let idx = markers.length - 1; idx >= 0; idx--){
+    if (!map.getBounds().contains(markers[idx].getPosition())){
+      markers[idx].setMap(null)
+      markers.splice(idx, idx)
+      if (markers.length === 1) markers.splice(idx)
+    }
+  }
+}
+
+function isMarkerOnMap(coord){
+  return markers.some(marker => {
+    marker.getPosition().equals(coord)
   })
 }
 
@@ -187,7 +197,7 @@ function initMap() {
             let currentStationCoord = { lat: lat, lng: long}
             let googleCoord = new google.maps.LatLng(currentStationCoord)
             
-            if (map.getBounds().contains(googleCoord)){
+            if (map.getBounds().contains(googleCoord) && !isMarkerOnMap(googleCoord)){
               placeMarker(stationName, stationOwner, currentStationCoord)
             } 
           })
@@ -224,8 +234,11 @@ axios.get('/api/stations/all').then(res => {
     let stationName = station.name
     let stationOwner = station.owner
     let currentStationCoord = { lat: lat, lng: long}
+    let googleCoord = new google.maps.LatLng(currentStationCoord)
     
-    placeMarker(stationName, stationOwner, currentStationCoord)
+    if (map.getBounds().contains(googleCoord)){
+      placeMarker(stationName, stationOwner, currentStationCoord)
+    } 
   })
 })
 
