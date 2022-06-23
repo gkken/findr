@@ -55,3 +55,22 @@ main {
   height: 100%;
 }
 
+.bp-color {
+  background-color: #90ef90;
+}
+
+.caltex-color {
+  background-color: #ff0000;
+}
+
+.seven-eleven-color {
+  background-color: #ffa502;
+}
+
+.shell-color {
+  background-color: #ffff02;
+}
+
+.default-color {
+  background-color: #0084ff;
+}
