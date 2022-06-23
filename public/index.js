@@ -2,7 +2,7 @@ const leftBar = document.querySelector('.left-bar')
 const rightBar = document.querySelector('.right-bar')
 
 let markers = []
-let map, infoWindow;
+let map, infoWindow, currentLocation;
 
 // close your eyes and collapse this function for your sanity
 function placeMarker(stationName, stationOwner, currentStationCoord){
@@ -25,16 +25,6 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
   }
   let pinLabel = stationOwner[0];
   let pinSVGFilled = "M 12,2 C 8.1340068,2 5,5.1340068 5,9 c 0,5.25 7,13 7,13 0,0 7,-7.75 7,-13 0,-3.8659932 -3.134007,-7 -7,-7 z";
-  let markerImage = {
-      path: pinSVGFilled,
-      anchor: new google.maps.Point(12,17),
-      fillOpacity: 1,
-      fillColor: pinColor,
-      strokeWeight: 2,
-      strokeColor: "white",
-      scale: 2,
-      labelOrigin: new google.maps.Point(12,10)
-  };
   let label = {
       text: pinLabel,
       color: "black",
@@ -44,7 +34,16 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
   const marker = new google.maps.Marker({
     position: currentStationCoord,
     map: map,
-    icon: markerImage,
+    icon: {
+      path: pinSVGFilled,
+      anchor: new google.maps.Point(12,17),
+      fillOpacity: 1,
+      fillColor: pinColor,
+      strokeWeight: 2,
+      strokeColor: "white",
+      scale: 2,
+      labelOrigin: new google.maps.Point(12,10)
+  },
     label: label
   })
   
@@ -64,9 +63,9 @@ function placeMarker(stationName, stationOwner, currentStationCoord){
   markers.push(marker)
 }
 
-function removeAllMarkers(){
+function removeOutOfBoundMarkers(){
   markers.forEach(marker => {
-    marker.setMap(null)
+    if (!map.getBounds().contains(marker.getPosition())) marker.setMap(null)
   })
 }
 
@@ -82,7 +81,7 @@ function initMap() {
         zoom: 13,
         minZoom: 11,
       });
-      
+
       let currenLocDiv = document.createElement('div')
       let titleCl = document.createElement('h2')
       let inputLat = document.createElement('input')
@@ -104,7 +103,7 @@ function initMap() {
       currenLocDiv.appendChild(inputLong)
 
       map.addListener("dragend", () => {
-        removeAllMarkers()
+        removeOutOfBoundMarkers(map)
 
         axios.get('/api/stations/all').then(res =>{
           res.data.forEach(station => {
@@ -113,14 +112,17 @@ function initMap() {
             let stationName = station.name
             let stationOwner = station.owner
             let currentStationCoord = { lat: lat, lng: long}
-          
-            placeMarker(stationName, stationOwner, currentStationCoord)
+            let googleCoord = new google.maps.LatLng(currentStationCoord)
+            
+            if (map.getBounds().contains(googleCoord)){
+              placeMarker(stationName, stationOwner, currentStationCoord)
+            } 
           })
         })
       })
 
       map.addListener('zoom_changed', () => {
-        removeAllMarkers()
+        removeOutOfBoundMarkers(map)
 
         axios.get('/api/stations/all').then(res =>{
           res.data.forEach(station => {
@@ -129,16 +131,17 @@ function initMap() {
             let stationName = station.name
             let stationOwner = station.owner
             let currentStationCoord = { lat: lat, lng: long}
+            let googleCoord = new google.maps.LatLng(currentStationCoord)
             
-            placeMarker(stationName, stationOwner, currentStationCoord)
+            if (map.getBounds().contains(googleCoord)){
+              placeMarker(stationName, stationOwner, currentStationCoord)
+            } 
           })
         })
       })
     })
   }
 }
-  
-window.initMap = initMap;
 
 axios.get('/api/stations/all').then(res =>{
   res.data.forEach(station => {
