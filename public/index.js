@@ -7,6 +7,9 @@ const nearestDiv = document.querySelector('.nearest-div')
 const latInput = document.querySelector('.input-lat')
 const lngInput = document.querySelector('.input-lng')
 const addressDiv = document.querySelector('.address-div')
+const refreshLink = document.querySelector('.refresh-link')
+const randomStation = document.querySelector('.station-link')
+const spotlightOwner = document.querySelector('.spotlight-owner')
 
 let allRandomData
 
@@ -201,24 +204,16 @@ axios.get('/api/stations/all').then(res => {
 
 axios.get('/api/stations/random').then(res => {
   allRandomData = res.data
-  console.log(allRandomData);
-  
-  let title = document.createElement('h1')
-  let refreshLink = document.createElement('a')
-  let station = document.createElement('a')
-  let owner = document.createElement('p')
 
-  station.setAttribute('href', 'javascript:handleLink()')
+  randomStation.setAttribute('href', 'javascript:handleLink()')
   refreshLink.setAttribute('href', '/')
 
-  title.textContent = 'spotlight'
   refreshLink.textContent = 'refresh'
-  station.textContent = allRandomData.name
-  owner.textContent = allRandomData.owner
+  randomStation.textContent = allRandomData.name
+  spotlightOwner.textContent = allRandomData.owner
 
-  spotlightDiv.appendChild(title)
-  spotlightDiv.appendChild(station)
-  spotlightDiv.appendChild(owner)
+  spotlightDiv.appendChild(randomStation)
+  spotlightDiv.appendChild(spotlightOwner)
   spotlightDiv.appendChild(refreshLink)
   leftBar.appendChild(spotlightDiv)
 
