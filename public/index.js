@@ -120,7 +120,7 @@ function renderNearest(nearestStation) {
   return `
   <div class="nearest-station ${nearestStationColor}">
       <h4>${nearestStation.name}</h4>
-      <p>${nearestStation.owner}</p>
+      <div class="owner-text">${nearestStation.owner}</div>
       <p>${nearestStation.street_add}</p>
       <p>${nearestStation.city}</p>
   </div>
@@ -260,7 +260,6 @@ axios.get('/api/stations/random').then(res => {
   randomStation.setAttribute('href', 'javascript:handleLink()')
   refreshLink.setAttribute('href', '/')
 
-  refreshLink.textContent = 'refresh'
   randomStation.textContent = allRandomData.name
   spotlightOwner.textContent = allRandomData.owner
 
@@ -279,13 +278,14 @@ axios.get('/api/owners/total').then(res => {
   
   let title1 = document.createElement('h1')
   let subHeader = document.createElement('h2')
-  let title2 = document.createElement('h1')
+  let title2 = document.createElement('h2')
   let ownersTable = document.createElement('table')
   let totalOwners = document.createElement('div')
+  totalOwners.className = 'station-count'
 
-  title1.textContent = 'stats'
-  subHeader.textContent = 'total stations'
-  title2.textContent = 'breakdown by owners'
+  title1.textContent = 'STATS'
+  subHeader.textContent = 'Total Stations'
+  title2.textContent = 'Breakdown by Owners'
 
   allData.forEach(data => {
 
@@ -296,7 +296,9 @@ axios.get('/api/owners/total').then(res => {
       
       let column = document.createElement('tr')
       let ownerRow = document.createElement('td')
+      ownerRow.className = 'owner-row'
       let countRow = document.createElement('td')
+      countRow.className = 'count-row'
   
       ownerRow.textContent = data.owner
       countRow.textContent = data.count
