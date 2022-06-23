@@ -5,13 +5,8 @@ const port = 8080
 
 db = new Pool({
   user: 'postgres',
-<<<<<<< HEAD
   database: 'findr', 
   password: '' //change password
-=======
-  database: 'findr', //change back to test1
-  password: 'edthoo'
->>>>>>> nearest stations
 })
 
 app.use(express.static('public'))

@@ -27,19 +27,6 @@ function placeMarker(stationName, stationOwner, currentStationCoord) {
   }
   let pinLabel = stationOwner[0];
   let pinSVGFilled = "M 12,2 C 8.1340068,2 5,5.1340068 5,9 c 0,5.25 7,13 7,13 0,0 7,-7.75 7,-13 0,-3.8659932 -3.134007,-7 -7,-7 z";
-<<<<<<< HEAD
-=======
-  let markerImage = {
-    path: pinSVGFilled,
-    anchor: new google.maps.Point(12, 17),
-    fillOpacity: 1,
-    fillColor: pinColor,
-    strokeWeight: 2,
-    strokeColor: "white",
-    scale: 2,
-    labelOrigin: new google.maps.Point(12, 10)
-  };
->>>>>>> nearest stations
   let label = {
     text: pinLabel,
     color: "black",
@@ -67,7 +54,6 @@ function placeMarker(stationName, stationOwner, currentStationCoord) {
   const infowindow = new google.maps.InfoWindow({
     content: contentString,
   });
-<<<<<<< HEAD
   
     marker.addListener("click", () => {
       infowindow.open({
@@ -75,24 +61,12 @@ function placeMarker(stationName, stationOwner, currentStationCoord) {
         map,
         shouldFocus: false,
       });
-=======
-
-  marker.addListener("click", () => {
-    infowindow.open({
-      anchor: marker,
-      map,
-      shouldFocus: false,
->>>>>>> nearest stations
     });
     markers.push(marker)
   }
 
 
-<<<<<<< HEAD
 function removeOutOfBoundMarkers(){
-=======
-function removeAllMarkers() {
->>>>>>> nearest stations
   markers.forEach(marker => {
     if (!map.getBounds().contains(marker.getPosition())) marker.setMap(null)
   })
@@ -162,13 +136,9 @@ function initMap() {
       currenLocDiv.appendChild(inputLong)
       
       map.addListener("dragend", () => {
-<<<<<<< HEAD
         removeOutOfBoundMarkers(map)
-=======
 
-        removeAllMarkers()
         updateNearestStations()
->>>>>>> nearest stations
 
         axios.get('/api/stations/all').then(res => {
           res.data.forEach(station => {
@@ -176,29 +146,18 @@ function initMap() {
             let long = station.long
             let stationName = station.name
             let stationOwner = station.owner
-<<<<<<< HEAD
             let currentStationCoord = { lat: lat, lng: long}
             let googleCoord = new google.maps.LatLng(currentStationCoord)
             
             if (map.getBounds().contains(googleCoord)){
               placeMarker(stationName, stationOwner, currentStationCoord)
             } 
-=======
-            let currentStationCoord = { lat: lat, lng: long }
-
-            placeMarker(stationName, stationOwner, currentStationCoord)
->>>>>>> nearest stations
           })
         })
       })
       
       map.addListener('zoom_changed', () => {
-<<<<<<< HEAD
         removeOutOfBoundMarkers(map)
-=======
-
-        removeAllMarkers()
->>>>>>> nearest stations
 
         axios.get('/api/stations/all').then(res => {
           res.data.forEach(station => {
@@ -206,18 +165,12 @@ function initMap() {
             let long = station.long
             let stationName = station.name
             let stationOwner = station.owner
-<<<<<<< HEAD
             let currentStationCoord = { lat: lat, lng: long}
             let googleCoord = new google.maps.LatLng(currentStationCoord)
             
             if (map.getBounds().contains(googleCoord)){
               placeMarker(stationName, stationOwner, currentStationCoord)
             } 
-=======
-            let currentStationCoord = { lat: lat, lng: long }
-
-            placeMarker(stationName, stationOwner, currentStationCoord)
->>>>>>> nearest stations
           })
         })
       })
@@ -225,11 +178,6 @@ function initMap() {
     })
   }
 }
-<<<<<<< HEAD
-=======
-
-window.initMap = initMap;
->>>>>>> nearest stations
 
 axios.get('/api/stations/all').then(res => {
   res.data.forEach(station => {
@@ -237,18 +185,12 @@ axios.get('/api/stations/all').then(res => {
     let long = station.long
     let stationName = station.name
     let stationOwner = station.owner
-<<<<<<< HEAD
     let currentStationCoord = { lat: lat, lng: long}
     
-=======
-    let currentStationCoord = { lat: lat, lng: long }
-
->>>>>>> nearest stations
     placeMarker(stationName, stationOwner, currentStationCoord)
   })
 })
 
-<<<<<<< HEAD
 
 axios.get('/api/stations/random').then(res => {
   allRandomData = res.data
@@ -282,8 +224,6 @@ function handleLink() {
 }
 
 
-=======
->>>>>>> nearest stations
 axios.get('/api/owners/total').then(res => {
   let allData = res.data
   let total = 0
