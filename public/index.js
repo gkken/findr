@@ -84,7 +84,7 @@ function removeOutOfBoundMarkers(){
 
 function renderNearest(nearestStation) {
   return `
-  <div class="nearest-station" data-id="${nearestStation.id}">
+  <div class="nearest-station">
       <h4>${nearestStation.name}</h4>
       <p>${nearestStation.street_add}</p>
       <p>${nearestStation.city}</p>
@@ -93,19 +93,26 @@ function renderNearest(nearestStation) {
 }
 
 function renderNearest5(nearestStations) {
-  let nearest5Stations = []
-
-  for (let i = 0; i <= 4; i++) {
-    nearest5Stations.push(nearestStations[i])
-  }
-  return nearest5Stations.map(renderNearest).join('')
+  
+  return nearestStations.filter(station => nearestStations.indexOf(station) < 5).map(renderNearest).join('')
 }
 
 function updateNearestStations() {
   let centerLat = map.center.lat()
   let centerLong = map.center.lng()
 
-  axios.get(`/api/stations/nearest?lat=${centerLat}&long=${centerLong}&rad=5`).then(res => {
+  axios.get(`/api/stations/nearest?lat=${centerLat}&long=${centerLong}&rad=25`).then(res => {
+    let nearestStations = res.data
+
+    nearestDiv.innerHTML = renderNearest5(nearestStations)
+  })
+}
+
+function loadNearestStations(currentLocation) {
+  let centerLat = currentLocation.lat()
+  let centerLong = currentLocation.lng()
+
+  axios.get(`/api/stations/nearest?lat=${centerLat}&long=${centerLong}&rad=25`).then(res => {
     let nearestStations = res.data
 
     nearestDiv.innerHTML = renderNearest5(nearestStations)
@@ -118,11 +125,14 @@ function initMap() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
       currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+      loadNearestStations(currentLocation)
       
       map = new google.maps.Map(document.getElementById("map"), {
         center: currentLocation,
         zoom: 13,
         minZoom: 11,
+
       });
 
       let currenLocDiv = document.createElement('div')
@@ -267,10 +277,3 @@ axios.get('/api/owners/total').then(res => {
     }
   })
 })
-
-
-
-
-
-
-
