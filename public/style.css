@@ -7,7 +7,11 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: mistyrose;
+  background-color: white;
+}
+
+body {
+  font-family: 'Shadows Into Light Two', cursive;
 }
 
 main {
@@ -16,6 +20,36 @@ main {
   height: 100vh;
 }
 
+.left-bar {
+  border: 1px solid black;
+}
+
+.right-bar {
+  border: 1px solid black;
+}
+
+.spotlight-div {
+  border-bottom: 1px solid black;
+  padding: 5px;
+}
+
+.stats-div {
+  padding: 5px;
+}
+
+.current-div {
+  border-bottom: 1px solid black;
+  padding: 5px;
+}
+
+.nearest-station {
+  border-bottom: 1px solid black;
+  padding: 5px;
+}
+
+.nearest-header {
+  padding: 5px;
+}
 
 #map {
   height: 100%;

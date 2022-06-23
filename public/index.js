@@ -10,6 +10,7 @@ const addressDiv = document.querySelector('.address-div')
 const refreshLink = document.querySelector('.refresh-link')
 const randomStation = document.querySelector('.station-link')
 const spotlightOwner = document.querySelector('.spotlight-owner')
+const nearestSection = document.querySelector('.nearest-section')
 
 let allRandomData
 
@@ -104,7 +105,7 @@ function updateNearestStations() {
   axios.get(`/api/stations/nearest?lat=${centerLat}&long=${centerLong}&rad=25`).then(res => {
     let nearestStations = res.data
 
-    nearestDiv.innerHTML = renderNearest5(nearestStations)
+    nearestSection.innerHTML = renderNearest5(nearestStations)
   })
 }
 
@@ -115,7 +116,7 @@ function loadNearestStations(currentLocation) {
   axios.get(`/api/stations/nearest?lat=${centerLat}&long=${centerLong}&rad=25`).then(res => {
     let nearestStations = res.data
 
-    nearestDiv.innerHTML = renderNearest5(nearestStations)
+    nearestSection.innerHTML = renderNearest5(nearestStations)
   })
 }
 
