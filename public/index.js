@@ -83,10 +83,27 @@ function removeOutOfBoundMarkers(){
   })
 }
 
+function getNearestStationColor(nearestStation) {
+  if (nearestStation.owner.includes('BP')) {
+    return 'bp-color'
+  } else if (nearestStation.owner.includes('Caltex')){
+    return 'caltex-color'
+  } else if (nearestStation.owner.includes('7 Eleven')){
+    return 'seven-eleven-color'
+  } else if (nearestStation.owner.includes('Shell')){
+    return 'shell-color'
+  } else {
+    return 'default-color'
+  }
+}
+
 function renderNearest(nearestStation) {
+  let nearestStationColor = getNearestStationColor(nearestStation)
+
   return `
-  <div class="nearest-station">
+  <div class="nearest-station ${nearestStationColor}">
       <h4>${nearestStation.name}</h4>
+      <p>${nearestStation.owner}</p>
       <p>${nearestStation.street_add}</p>
       <p>${nearestStation.city}</p>
   </div>
