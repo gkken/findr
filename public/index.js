@@ -13,7 +13,6 @@ const spotlightOwner = document.querySelector('.spotlight-owner')
 const nearestSection = document.querySelector('.nearest-section')
 
 let allRandomData
-
 let markers = []
 let map, infoWindow, currentLocation;
 
@@ -76,7 +75,6 @@ function placeMarker(stationName, stationOwner, currentStationCoord) {
     markers.push(marker)
   }
 
-
 function removeOutOfBoundMarkers(){
   for (let idx = markers.length - 1; idx >= 0; idx--){
     if (!map.getBounds().contains(markers[idx].getPosition())){
@@ -87,10 +85,19 @@ function removeOutOfBoundMarkers(){
   }
 }
 
+function handleLink() {
+  currentLocation = new google.maps.LatLng(allRandomData.lat, allRandomData.long)
+
+  map.setCenter(currentLocation) 
+}
+
 function isMarkerOnMap(coord){
-  return markers.some(marker => {
-    marker.getPosition().equals(coord)
+  let result = false
+  
+  markers.forEach(marker => {
+    if (coord.equals(marker.getPosition())) result = true
   })
+  return result
 }
 
 function getNearestStationColor(nearestStation) {
@@ -147,6 +154,10 @@ function loadNearestStations(currentLocation) {
   })
 }
 
+function isWithinBounds(coord){
+  return map.getBounds().contains(coord)
+}
+
 function initMap() {
   // to test set sensor location to anywhere
   // you can manage locations and add Melbourne lat: -37.8183, lng: 144.9671, timezone: Australia/Melbourne, locale: en-GB
@@ -184,20 +195,20 @@ function initMap() {
       currenLocDiv.appendChild(inputLong)
       
       map.addListener("dragend", () => {
-        removeOutOfBoundMarkers(map)
+        removeOutOfBoundMarkers()
 
         updateNearestStations()
 
         axios.get('/api/stations/all').then(res => {
           res.data.forEach(station => {
-            let lat = station.lat
-            let long = station.long
+            let lat = Number(station.lat.toFixed(5))
+            let long = Number(station.long.toFixed(5))
             let stationName = station.name
             let stationOwner = station.owner
             let currentStationCoord = { lat: lat, lng: long}
             let googleCoord = new google.maps.LatLng(currentStationCoord)
             
-            if (map.getBounds().contains(googleCoord) && !isMarkerOnMap(googleCoord)){
+            if (isWithinBounds(googleCoord) && !isMarkerOnMap(googleCoord)){
               placeMarker(stationName, stationOwner, currentStationCoord)
             } 
           })
@@ -205,7 +216,7 @@ function initMap() {
       })
       
       map.addListener('zoom_changed', () => {
-        removeOutOfBoundMarkers(map)
+        removeOutOfBoundMarkers()
 
         axios.get('/api/stations/all').then(res => {
           res.data.forEach(station => {
@@ -216,7 +227,7 @@ function initMap() {
             let currentStationCoord = { lat: lat, lng: long}
             let googleCoord = new google.maps.LatLng(currentStationCoord)
             
-            if (map.getBounds().contains(googleCoord)){
+            if (isWithinBounds(googleCoord) && !isMarkerOnMap(googleCoord)){
               placeMarker(stationName, stationOwner, currentStationCoord)
             } 
           })
@@ -229,14 +240,14 @@ function initMap() {
 
 axios.get('/api/stations/all').then(res => {
   res.data.forEach(station => {
-    let lat = station.lat
-    let long = station.long
+    let lat = Number(station.lat.toFixed(5))
+    let long = Number(station.long.toFixed(5))
     let stationName = station.name
     let stationOwner = station.owner
     let currentStationCoord = { lat: lat, lng: long}
     let googleCoord = new google.maps.LatLng(currentStationCoord)
     
-    if (map.getBounds().contains(googleCoord)){
+    if (isWithinBounds(googleCoord)){
       placeMarker(stationName, stationOwner, currentStationCoord)
     } 
   })
@@ -259,12 +270,6 @@ axios.get('/api/stations/random').then(res => {
   leftBar.appendChild(spotlightDiv)
 
 })
-
-function handleLink() {
-  currentLocation = new google.maps.LatLng(allRandomData.lat, allRandomData.long)
-
-  map.setCenter(currentLocation) 
-}
 
 
 axios.get('/api/owners/total').then(res => {
