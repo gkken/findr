@@ -8,9 +8,22 @@
   </head>
   <body>
     <main>
-      <div class="left-bar"></div>
+      <div class="left-bar">
+        <div class="spotlight-div"></div>
+        <div class="stats-div"></div>
+      </div>
       <div id="map"></div>
-      <div class="right-bar"></div>
+      <div class="right-bar">
+        <div class="current-div">
+          <h1>Current Location</h1>
+          <label for="">Latitude</label>
+          <input class="input-lat" type="text">
+          <label for="">Longitude</label>
+          <input class="input-lng" type="text">
+          <div class="address-div"></div>
+        </div>
+        <div class="nearest-div"></div>
+      </div>
     </main>
   </body>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">

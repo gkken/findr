@@ -1,5 +1,12 @@
 const leftBar = document.querySelector('.left-bar')
 const rightBar = document.querySelector('.right-bar')
+const spotlightDiv = document.querySelector('.spotlight-div')
+const statsDiv = document.querySelector('.stats-div')
+const currentDiv = document.querySelector('.current-div')
+const nearestDiv = document.querySelector('.nearest-div')
+const latInput = document.querySelector('.input-lat')
+const lngInput = document.querySelector('.input-lng')
+const addressDiv = document.querySelector('.address-div')
 
 let allRandomData
 
@@ -85,7 +92,7 @@ function renderNearest(nearestStation) {
 function renderNearest5(nearestStations) {
   let nearest5Stations = []
 
-  for (let i = 0; i <= 5; i++) {
+  for (let i = 0; i <= 4; i++) {
     nearest5Stations.push(nearestStations[i])
   }
   return nearest5Stations.map(renderNearest).join('')
@@ -98,7 +105,7 @@ function updateNearestStations() {
   axios.get(`/api/stations/nearest?lat=${centerLat}&long=${centerLong}&rad=5`).then(res => {
     let nearestStations = res.data
 
-    rightBar.innerHTML = renderNearest5(nearestStations)
+    nearestDiv.innerHTML = renderNearest5(nearestStations)
   })
 }
 
@@ -195,7 +202,7 @@ axios.get('/api/stations/all').then(res => {
 axios.get('/api/stations/random').then(res => {
   allRandomData = res.data
   console.log(allRandomData);
-  let spotlightContainerDiv = document.createElement('div')
+  
   let title = document.createElement('h1')
   let refreshLink = document.createElement('a')
   let station = document.createElement('a')
@@ -209,11 +216,11 @@ axios.get('/api/stations/random').then(res => {
   station.textContent = allRandomData.name
   owner.textContent = allRandomData.owner
 
-  spotlightContainerDiv.appendChild(title)
-  spotlightContainerDiv.appendChild(station)
-  spotlightContainerDiv.appendChild(owner)
-  spotlightContainerDiv.appendChild(refreshLink)
-  leftBar.appendChild(spotlightContainerDiv)
+  spotlightDiv.appendChild(title)
+  spotlightDiv.appendChild(station)
+  spotlightDiv.appendChild(owner)
+  spotlightDiv.appendChild(refreshLink)
+  leftBar.appendChild(spotlightDiv)
 
 })
 
@@ -228,7 +235,7 @@ axios.get('/api/owners/total').then(res => {
   let allData = res.data
   let total = 0
 
-  let statsContainerDiv = document.createElement('div')
+  
   let title1 = document.createElement('h1')
   let subHeader = document.createElement('h2')
   let title2 = document.createElement('h1')
@@ -253,12 +260,12 @@ axios.get('/api/owners/total').then(res => {
       ownerRow.textContent = data.owner
       countRow.textContent = data.count
   
-      leftBar.appendChild(statsContainerDiv)
-      statsContainerDiv.appendChild(title1)
-      statsContainerDiv.appendChild(subHeader)
-      statsContainerDiv.appendChild(totalOwners)
-      statsContainerDiv.appendChild(title2)
-      statsContainerDiv.appendChild(ownersTable)
+      leftBar.appendChild(statsDiv)
+      statsDiv.appendChild(title1)
+      statsDiv.appendChild(subHeader)
+      statsDiv.appendChild(totalOwners)
+      statsDiv.appendChild(title2)
+      statsDiv.appendChild(ownersTable)
       ownersTable.appendChild(column)
       column.appendChild(ownerRow)
       column.appendChild(countRow)
@@ -267,40 +274,7 @@ axios.get('/api/owners/total').then(res => {
 })
 
 
-axios.get('/api/stations/all').then(res => {
-  let allData = res.data
 
-  let spotlightContainerDiv = document.createElement('div')
-  let title = document.createElement('h1')
-  let refreshLink = document.createElement('a')
-  let station = document.createElement('p')
-  let owner = document.createElement('p')
-
-  refreshLink.setAttribute('href', '/')
-
-  title.textContent = 'spotlight'
-  refreshLink.textContent = 'refresh'
-
-  function random(min, max) {
-    return Math.random() * (max - min) + min
-  }
-
-  for (let i = 0; i < allData.length; i++) {
-    let randomData = allData[Math.floor(random(0, 300))]
-
-    station.textContent = randomData.name
-    owner.textContent = randomData.owner
-
-  }
-
-  spotlightContainerDiv.appendChild(title)
-  spotlightContainerDiv.appendChild(station)
-  spotlightContainerDiv.appendChild(owner)
-  spotlightContainerDiv.appendChild(refreshLink)
-  leftBar.appendChild(spotlightContainerDiv)
-
-
-})
 
 
 
