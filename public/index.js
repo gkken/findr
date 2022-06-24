@@ -197,12 +197,13 @@ function initMap() {
         placeMakers()
       })
 
+      placeNearestMarkers(currentLocation)
     })
   }
 }
 
 function placeMakers(){
-  axios.get(`/api/stations/nearest?lat=${currentLocation.lat()}&long=${currentLocation.lng()}&rad=25`).then(res => {
+  axios.get(`/api/stations/nearest?lat=${currentLocation.lat()}&long=${currentLocation.lng()}&rad=15`).then(res => {
     res.data.forEach(station => {
       let lat = Number(station.lat.toFixed(5))
       let long = Number(station.long.toFixed(5))
@@ -359,7 +360,7 @@ axios.get('/api/stations/all').then(res => {
 
 
 function placeNearestMarkers(currentLocation){
-  axios.get(`/api/stations/nearest?lat=${currentLocation.lat()}&long=${currentLocation.lng()}&rad=25`).then(res => {
+  axios.get(`/api/stations/nearest?lat=${currentLocation.lat()}&long=${currentLocation.lng()}&rad=15`).then(res => {
   res.data.forEach(station => {
     let lat = Number(station.lat.toFixed(5))
     let long = Number(station.long.toFixed(5))
