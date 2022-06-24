@@ -29,16 +29,9 @@ file.split('\n').forEach((line,idx) => {
   let long = line.split(',')[15]
 
   
-<<<<<<< HEAD
   let sql = 'INSERT INTO petrol_stations (name, owner, street_add, city, lat, long) VALUES ($1, $2, $3, $4, $5, $6)'
   db.query(sql, [name, owner, streetAdd, city, lat, long], (err, res) =>{
     console.log(err)
-=======
-  let sql = `INSERT INTO petrol_stations (name, owner, street_add, city, lat, long)
-  VALUES ($1, $2, $3, $4, $5, $6);`
-  db.query(sql, [name, owner, streetAdd, city, lat, long], (err, res) =>{
-    // console.log(err)
->>>>>>> readme
   })
 })
 

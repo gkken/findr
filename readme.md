@@ -15,18 +15,35 @@ clone the file get express and Google Maps API
 ## Usage
 Click and drag to find the nearest petrol stations
 
-## Roadmap
-No current future plans
+1. Get a Google API Key at https://console.cloud.google.com/apis/credentials
+
+2. Clone the repo
+```
+git clone https://git.generalassemb.ly/gkken/git-gods.git
+```
+
+3. Install NPM packages
+```
+npm install express 
+```
+
+4. Enter your API key in index.html
+```html
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=API-KEY-HERE&callback=initMap&v=weekly"
+    defer>
+</script>
+```
 
 ## Contributions
 Thank you to all that help with the code.
 
-Gitlord - Ken
+####Gitlord - Ken
 
-Gitpeasant - Aiching
-Gitpeasant - Edmund
-Gitpeasant - Foongyuan
-Gitpeasant - Nuraiman
+#####Gitpeasant - Aiching
+#####Gitpeasant - Edmund
+#####Gitpeasant - Foongyuan
+#####Gitpeasant - Nuraiman
 
 ## Acknowledgements
 
