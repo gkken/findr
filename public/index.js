@@ -7,6 +7,7 @@ const nearestDiv = document.querySelector('.nearest-div')
 const latInput = document.querySelector('.input-lat')
 const lngInput = document.querySelector('.input-lng')
 const addressDiv = document.querySelector('.address-div')
+const addressDetail = document.querySelector('.address')
 const refreshLink = document.querySelector('.refresh-link')
 const randomStation = document.querySelector('.station-link')
 const spotlightOwner = document.querySelector('.spotlight-owner')
@@ -250,18 +251,29 @@ axios.get('/api/owners/total').then(res => {
 
     let totalCountOfOwners = total += Number(data.count)
     totalOwners.textContent = totalCountOfOwners
-    ownerRow.textContent = data.owner
-    countRow.textContent = data.count
 
-    leftBar.appendChild(statsDiv)
-    statsDiv.appendChild(title1)
-    statsDiv.appendChild(subHeader)
-    statsDiv.appendChild(totalOwners)
-    statsDiv.appendChild(title2)
-    statsDiv.appendChild(ownersTable)
-    ownersTable.appendChild(column)
-    column.appendChild(ownerRow)
-    column.appendChild(countRow)
+    if (data.count > 1) {
+      
+      let column = document.createElement('tr')
+      let ownerRow = document.createElement('td')
+      ownerRow.className = 'owner-row'
+      let countRow = document.createElement('td')
+      countRow.className = 'count-row'
+  
+      ownerRow.textContent = data.owner
+      countRow.textContent = data.count
+  
+      leftBar.appendChild(statsDiv)
+      statsDiv.appendChild(title1)
+      statsDiv.appendChild(subHeader)
+      statsDiv.appendChild(totalOwners)
+      statsDiv.appendChild(title2)
+      statsDiv.appendChild(ownersTable)
+      ownersTable.appendChild(column)
+      column.appendChild(ownerRow)
+      column.appendChild(countRow)
+    }
+  
   })
   
 })
@@ -272,12 +284,6 @@ axios.get('/api/owners/total').then(res => {
 
     let addressTitle = document.createElement('h2')
     let addressDetail = document.createElement('p')
-    addressTitle.textContent = 'Address'
-    addressDetail.textContent
-    
-    addressDiv.appendChild(addressTitle)
-    addressDiv.appendChild(addressDetail)
-    addressDetail.className = 'address-detail'
     latInput.value = currentLocation.lat()
     lngInput.value = currentLocation.lng()
     
@@ -304,7 +310,7 @@ axios.get('/api/owners/total').then(res => {
         if (status == google.maps.GeocoderStatus.OK) {
             console.log(results);
             let address = (results[0].formatted_address);
-            document.querySelector('.address-detail').textContent = address
+            addressDetail.textContent = address
         }
     });
 }
