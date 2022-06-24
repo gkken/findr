@@ -124,7 +124,7 @@ img {
   margin-top: 1px;
   font-style: italic;
   font-size: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 23.6px;
 }
 
 .nearest-header {
@@ -184,12 +184,16 @@ table {
 .input-lng {
   width: 233px;
   border: 2px solid #ff7420;
+  color: #ff7420;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .address {
   font-family: 'Overpass', sans-serif;
   font-weight: 600;
   color: #ff7420;
+  margin-top: 10px;
 }
 
 .address-div{

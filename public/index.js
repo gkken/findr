@@ -249,8 +249,8 @@ axios.get('/api/owners/total').then(res => {
   totalOwners.className = 'station-count'
 
   title1.textContent = 'STATS'
-  subHeader.textContent = 'Total Stations'
-  title2.textContent = 'Breakdown by Owners'
+  subHeader.textContent = 'Total Single Stations'
+  title2.textContent = 'Breakdown by Types'
 
   allData.forEach(data => {
 
