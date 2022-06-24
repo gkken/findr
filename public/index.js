@@ -167,38 +167,19 @@ function initMap() {
     navigator.geolocation.getCurrentPosition(function (position) {
       currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
      
-
+      
       loadNearestStations(currentLocation)
       
       map = new google.maps.Map(document.getElementById("map"), {
         center: currentLocation,
         zoom: 13,
         minZoom: 11,
-
+        
       });
       getReverseGeocodingData()
       currentLoc()
-
       placeNearestMarkers(currentLocation)
-      let currenLocDiv = document.createElement('div')
-      let titleCl = document.createElement('h2')
-      let inputLat = document.createElement('input')
-      let inputLong = document.createElement('input')
-      let labelLat = document.createElement('label')
-      let labelLong = document.createElement('label')
-      
-      currenLocDiv.className = 'Current-loc'
-      titleCl.textContent = 'Current Location'
-      labelLat.textContent = 'Latitude'
-      labelLong.textContent = 'Longitude'
-      inputLat.value = position.coords.latitude
-      inputLong.value = position.coords.longitude
-      rightBar.appendChild(currenLocDiv)
-      currenLocDiv.appendChild(titleCl)
-      currenLocDiv.appendChild(labelLat)
-      currenLocDiv.appendChild(inputLat)
-      currenLocDiv.appendChild(labelLong)
-      currenLocDiv.appendChild(inputLong)
+   
       
       map.addListener("dragend", () => {
         removeOutOfBoundMarkers()
@@ -285,58 +266,32 @@ axios.get('/api/owners/total').then(res => {
   
 })
 
-  // CURRENT LOCATION
-  
+
+// CURRENT LOCATION
   function currentLoc() {
 
-    
-    // rightBar.appendChild(inputLat)
-    // rightBar.appendChild(inputLong)
-    
-    let inputLat = document.createElement('input')
-    let inputLong = document.createElement('input')
-    let currenLocDiv = document.createElement('div')
-    let titleCl = document.createElement('h2')
-    let labelLat = document.createElement('label')
-    let labelLong = document.createElement('label')
-    
     let addressTitle = document.createElement('h2')
     let addressDetail = document.createElement('p')
     addressTitle.textContent = 'Address'
     addressDetail.textContent
     
-    inputLat.className = 'input-lat'
-    inputLong.className = 'input-long'
+    addressDiv.appendChild(addressTitle)
+    addressDiv.appendChild(addressDetail)
     addressDetail.className = 'address-detail'
-    currenLocDiv.className = 'Current-loc'
-    titleCl.textContent = 'Current Location'
-    labelLat.textContent = 'Latitude'
-    labelLong.textContent = 'Longitude'
-    inputLat.value = currentLocation.lat()
-    inputLong.value = currentLocation.lng()
-    console.log(currentLocation.lat())
+    latInput.value = currentLocation.lat()
+    lngInput.value = currentLocation.lng()
     
-    rightBar.appendChild(currenLocDiv)
-    currenLocDiv.appendChild(titleCl)
-    currenLocDiv.appendChild(labelLat)
-    currenLocDiv.appendChild(inputLat)
-    currenLocDiv.appendChild(labelLong)
-    currenLocDiv.appendChild(inputLong)
-    currenLocDiv.appendChild(addressTitle)
-    currenLocDiv.appendChild(addressDetail)
-
-  
   }
   
   function updateCurrentLoc (){
     let latCenter = map.center.lat()
     let longCenter = map.center.lng()
-    document.querySelector('.input-lat').value = latCenter
-    document.querySelector('.input-long').value = longCenter
+    latInput.value = latCenter
+    lngInput.value = longCenter
   }
 
 
-  // ADDRESS
+  // GEO REVERSE ADDRESS
   function getReverseGeocodingData() {
     var latlng = map.center
     // This is making the Geocode request
