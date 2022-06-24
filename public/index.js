@@ -184,12 +184,16 @@ function initMap() {
       
       map.addListener("dragend", () => {
         removeOutOfBoundMarkers()
+        updateCurrentLoc()
         updateNearestStations()
+        getReverseGeocodingData()
         placeMakers()
       })
       
       map.addListener('zoom_changed', () => {
+        getReverseGeocodingData()
         removeOutOfBoundMarkers()
+        updateCurrentLoc()
         placeMakers()
       })
 
