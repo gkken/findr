@@ -253,12 +253,12 @@ axios.get('/api/owners/total').then(res => {
     ownerRow.textContent = data.owner
     countRow.textContent = data.count
 
-    leftBar.appendChild(statsContainerDiv)
-    statsContainerDiv.appendChild(title1)
-    statsContainerDiv.appendChild(subHeader)
-    statsContainerDiv.appendChild(totalOwners)
-    statsContainerDiv.appendChild(title2)
-    statsContainerDiv.appendChild(ownersTable)
+    leftBar.appendChild(statsDiv)
+    statsDiv.appendChild(title1)
+    statsDiv.appendChild(subHeader)
+    statsDiv.appendChild(totalOwners)
+    statsDiv.appendChild(title2)
+    statsDiv.appendChild(ownersTable)
     ownersTable.appendChild(column)
     column.appendChild(ownerRow)
     column.appendChild(countRow)
