@@ -186,6 +186,12 @@ table {
   border: 2px solid #ff7420;
 }
 
+.address {
+  font-family: 'Overpass', sans-serif;
+  font-weight: 600;
+  color: #ff7420;
+}
+
 .address-div{
   height: 70px;
 }

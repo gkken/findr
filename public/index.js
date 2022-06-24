@@ -88,7 +88,8 @@ function removeOutOfBoundMarkers(){
 function handleLink() {
   currentLocation = new google.maps.LatLng(allRandomData.lat, allRandomData.long)
 
-  map.setCenter(currentLocation) 
+  map.setCenter(currentLocation)
+  placeMakers(currentLocation) 
 }
 
 function isMarkerOnMap(coord){
@@ -174,6 +175,7 @@ function initMap() {
 
       });
 
+      placeNearestMarkers(currentLocation)
       let currenLocDiv = document.createElement('div')
       let titleCl = document.createElement('h2')
       let inputLat = document.createElement('input')
@@ -196,63 +198,35 @@ function initMap() {
       
       map.addListener("dragend", () => {
         removeOutOfBoundMarkers()
-
         updateNearestStations()
-
-        axios.get('/api/stations/all').then(res => {
-          res.data.forEach(station => {
-            let lat = Number(station.lat.toFixed(5))
-            let long = Number(station.long.toFixed(5))
-            let stationName = station.name
-            let stationOwner = station.owner
-            let currentStationCoord = { lat: lat, lng: long}
-            let googleCoord = new google.maps.LatLng(currentStationCoord)
-            
-            if (isWithinBounds(googleCoord) && !isMarkerOnMap(googleCoord)){
-              placeMarker(stationName, stationOwner, currentStationCoord)
-            } 
-          })
-        })
+        placeMakers()
       })
       
       map.addListener('zoom_changed', () => {
         removeOutOfBoundMarkers()
-
-        axios.get('/api/stations/all').then(res => {
-          res.data.forEach(station => {
-            let lat = station.lat
-            let long = station.long
-            let stationName = station.name
-            let stationOwner = station.owner
-            let currentStationCoord = { lat: lat, lng: long}
-            let googleCoord = new google.maps.LatLng(currentStationCoord)
-            
-            if (isWithinBounds(googleCoord) && !isMarkerOnMap(googleCoord)){
-              placeMarker(stationName, stationOwner, currentStationCoord)
-            } 
-          })
-        })
+        placeMakers()
       })
 
     })
   }
 }
 
-axios.get('/api/stations/all').then(res => {
-  res.data.forEach(station => {
-    let lat = Number(station.lat.toFixed(5))
-    let long = Number(station.long.toFixed(5))
-    let stationName = station.name
-    let stationOwner = station.owner
-    let currentStationCoord = { lat: lat, lng: long}
-    let googleCoord = new google.maps.LatLng(currentStationCoord)
-    
-    if (isWithinBounds(googleCoord)){
-      placeMarker(stationName, stationOwner, currentStationCoord)
+function placeMakers(){
+  axios.get(`/api/stations/nearest?lat=${currentLocation.lat()}&long=${currentLocation.lng()}&rad=25`).then(res => {
+    res.data.forEach(station => {
+      let lat = Number(station.lat.toFixed(5))
+      let long = Number(station.long.toFixed(5))
+      let stationName = station.name
+      let stationOwner = station.owner
+      let currentStationCoord = { lat: lat, lng: long}
+      let googleCoord = new google.maps.LatLng(currentStationCoord)
+
+      if (isWithinBounds(googleCoord) && !isMarkerOnMap(googleCoord)){
+        placeMarker(stationName, stationOwner, currentStationCoord)
     } 
   })
 })
-
+}
 
 axios.get('/api/stations/random').then(res => {
   allRandomData = res.data
@@ -315,3 +289,21 @@ axios.get('/api/owners/total').then(res => {
     }
   })
 })
+
+
+function placeNearestMarkers(currentLocation){
+  axios.get(`/api/stations/nearest?lat=${currentLocation.lat()}&long=${currentLocation.lng()}&rad=25`).then(res => {
+  res.data.forEach(station => {
+    let lat = Number(station.lat.toFixed(5))
+    let long = Number(station.long.toFixed(5))
+    let stationName = station.name
+    let stationOwner = station.owner
+    let currentStationCoord = { lat: lat, lng: long}
+    let googleCoord = new google.maps.LatLng(currentStationCoord)
+
+    if (isWithinBounds(googleCoord)){
+      placeMarker(stationName, stationOwner, currentStationCoord)
+    } 
+  })
+})
+}
