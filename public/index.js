@@ -7,6 +7,7 @@ const nearestDiv = document.querySelector('.nearest-div')
 const latInput = document.querySelector('.input-lat')
 const lngInput = document.querySelector('.input-lng')
 const addressDiv = document.querySelector('.address-div')
+const addressDetail = document.querySelector('.address')
 const refreshLink = document.querySelector('.refresh-link')
 const randomStation = document.querySelector('.station-link')
 const spotlightOwner = document.querySelector('.spotlight-owner')
@@ -14,6 +15,8 @@ const nearestSection = document.querySelector('.nearest-section')
 
 let allRandomData
 let markers = []
+
+
 let map, infoWindow, currentLocation;
 
 // close your eyes and collapse this function for your sanity
@@ -160,50 +163,37 @@ function isWithinBounds(coord){
 }
 
 function initMap() {
-  // to test set sensor location to anywhere
   // you can manage locations and add Melbourne lat: -37.8183, lng: 144.9671, timezone: Australia/Melbourne, locale: en-GB
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
       currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
+     
+      
       loadNearestStations(currentLocation)
       
       map = new google.maps.Map(document.getElementById("map"), {
         center: currentLocation,
         zoom: 13,
         minZoom: 11,
-
+        
       });
-
+      getReverseGeocodingData()
+      currentLoc()
       placeNearestMarkers(currentLocation)
-      let currenLocDiv = document.createElement('div')
-      let titleCl = document.createElement('h2')
-      let inputLat = document.createElement('input')
-      let inputLong = document.createElement('input')
-      let labelLat = document.createElement('label')
-      let labelLong = document.createElement('label')
-      
-      currenLocDiv.className = 'Current-loc'
-      titleCl.textContent = 'Current Location'
-      labelLat.textContent = 'Latitude'
-      labelLong.textContent = 'Longitude'
-      inputLat.value = position.coords.latitude
-      inputLong.value = position.coords.longitude
-      rightBar.appendChild(currenLocDiv)
-      currenLocDiv.appendChild(titleCl)
-      currenLocDiv.appendChild(labelLat)
-      currenLocDiv.appendChild(inputLat)
-      currenLocDiv.appendChild(labelLong)
-      currenLocDiv.appendChild(inputLong)
+   
       
       map.addListener("dragend", () => {
         removeOutOfBoundMarkers()
+        updateCurrentLoc()
         updateNearestStations()
+        getReverseGeocodingData()
         placeMakers()
       })
       
       map.addListener('zoom_changed', () => {
+        getReverseGeocodingData()
         removeOutOfBoundMarkers()
+        updateCurrentLoc()
         placeMakers()
       })
 
@@ -287,8 +277,85 @@ axios.get('/api/owners/total').then(res => {
       column.appendChild(ownerRow)
       column.appendChild(countRow)
     }
+  
   })
+  
 })
+
+
+// CURRENT LOCATION
+  function currentLoc() {
+
+    let addressTitle = document.createElement('h2')
+    let addressDetail = document.createElement('p')
+    latInput.value = currentLocation.lat()
+    lngInput.value = currentLocation.lng()
+    
+  }
+  
+  function updateCurrentLoc (){
+    let latCenter = map.center.lat()
+    let longCenter = map.center.lng()
+    latInput.value = latCenter
+    lngInput.value = longCenter
+  }
+
+
+  // GEO REVERSE ADDRESS
+  function getReverseGeocodingData() {
+    var latlng = map.center
+    // This is making the Geocode request
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': latlng },  (results, status) =>{
+        if (status !== google.maps.GeocoderStatus.OK) {
+            alert(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+            let address = (results[0].formatted_address);
+            addressDetail.textContent = address
+        }
+    });
+}
+
+
+
+// console.log(getReverseGeocodingData(-37.8183, 144.9671))
+
+
+
+
+axios.get('/api/stations/all').then(res => {
+  let allData = res.data
+
+/////////// Nearest 5 stations section
+  let nearestSection = document.createElement('section')
+  let nearestTitle = document.createElement('h1')
+
+    if (data.count > 1) {
+      
+      let column = document.createElement('tr')
+      let ownerRow = document.createElement('td')
+      ownerRow.className = 'owner-row'
+      let countRow = document.createElement('td')
+      countRow.className = 'count-row'
+  
+      ownerRow.textContent = data.owner
+      countRow.textContent = data.count
+  
+      leftBar.appendChild(statsDiv)
+      statsDiv.appendChild(title1)
+      statsDiv.appendChild(subHeader)
+      statsDiv.appendChild(totalOwners)
+      statsDiv.appendChild(title2)
+      statsDiv.appendChild(ownersTable)
+      ownersTable.appendChild(column)
+      column.appendChild(ownerRow)
+      column.appendChild(countRow)
+    }
+  })
+
 
 
 function placeNearestMarkers(currentLocation){
