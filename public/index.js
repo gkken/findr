@@ -15,6 +15,7 @@ const nearestSection = document.querySelector('.nearest-section')
 let allRandomData
 let markers = []
 
+
 let map, infoWindow, currentLocation;
 
 // close your eyes and collapse this function for your sanity
@@ -165,6 +166,7 @@ function initMap() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
       currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+     
 
       loadNearestStations(currentLocation)
       
@@ -174,6 +176,8 @@ function initMap() {
         minZoom: 11,
 
       });
+      getReverseGeocodingData()
+      currentLoc()
 
       placeNearestMarkers(currentLocation)
       let currenLocDiv = document.createElement('div')
@@ -285,10 +289,14 @@ axios.get('/api/owners/total').then(res => {
   
   function currentLoc() {
 
-    let currenLocDiv = document.createElement('div')
-    let titleCl = document.createElement('h2')
+    
+    // rightBar.appendChild(inputLat)
+    // rightBar.appendChild(inputLong)
+    
     let inputLat = document.createElement('input')
     let inputLong = document.createElement('input')
+    let currenLocDiv = document.createElement('div')
+    let titleCl = document.createElement('h2')
     let labelLat = document.createElement('label')
     let labelLong = document.createElement('label')
     
@@ -297,6 +305,9 @@ axios.get('/api/owners/total').then(res => {
     addressTitle.textContent = 'Address'
     addressDetail.textContent
     
+    inputLat.className = 'input-lat'
+    inputLong.className = 'input-long'
+    addressDetail.className = 'address-detail'
     currenLocDiv.className = 'Current-loc'
     titleCl.textContent = 'Current Location'
     labelLat.textContent = 'Latitude'
@@ -311,9 +322,41 @@ axios.get('/api/owners/total').then(res => {
     currenLocDiv.appendChild(inputLat)
     currenLocDiv.appendChild(labelLong)
     currenLocDiv.appendChild(inputLong)
+    currenLocDiv.appendChild(addressTitle)
+    currenLocDiv.appendChild(addressDetail)
 
   
   }
+  
+  function updateCurrentLoc (){
+    let latCenter = map.center.lat()
+    let longCenter = map.center.lng()
+    document.querySelector('.input-lat').value = latCenter
+    document.querySelector('.input-long').value = longCenter
+  }
+
+
+  // ADDRESS
+  function getReverseGeocodingData() {
+    var latlng = map.center
+    // This is making the Geocode request
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ 'latLng': latlng },  (results, status) =>{
+        if (status !== google.maps.GeocoderStatus.OK) {
+            alert(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+            let address = (results[0].formatted_address);
+            document.querySelector('.address-detail').textContent = address
+        }
+    });
+}
+
+
+
+// console.log(getReverseGeocodingData(-37.8183, 144.9671))
 
 
 
