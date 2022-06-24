@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production'){
   db = new Pool({
   user: 'postgres',
   database: 'findr',
-  password: process.env.DATABASE_PASSWORD
+  password: 'edthoo'
 })
 }
 const fs = require('fs')

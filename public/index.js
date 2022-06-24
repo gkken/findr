@@ -106,7 +106,7 @@ function getNearestStationColor(nearestStation) {
     return 'bp-color'
   } else if (nearestStation.owner.includes('Caltex')){
     return 'caltex-color'
-  } else if (nearestStation.owner.includes('7 Eleven')){
+  } else if (nearestStation.owner.includes('7-Eleven')){
     return 'seven-eleven-color'
   } else if (nearestStation.owner.includes('Shell')){
     return 'shell-color'
