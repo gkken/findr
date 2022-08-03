@@ -1,20 +1,27 @@
 <html>
   <head>
     <title>Findr</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Overpass&family=Rubik:wght@600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Overpass&family=Rubik:wght@600&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <main>
       <div class="left-bar">
         <div class="img-wrapper">
-          <img src="./findr-logo.png" alt="" class="logo">
+          <img src="./findr-logo.png" alt="" class="logo" />
         </div>
         <div class="spotlight-div">
           <h1 class="spotlight-header">PUMP OF THE DAY</h1>
@@ -32,11 +39,11 @@
           <h1>CURRENT LOCATION</h1>
           <div class="lat-div">
             <label for="" class="lat-text">Latitude:</label>
-            <input class="input-lat" type="text">
+            <input class="input-lat" type="text" />
           </div>
           <div class="long-div">
             <label for="" class="long-text">Longitude:</label>
-            <input class="input-lng" type="text">
+            <input class="input-lng" type="text" />
           </div>
           <div class="address-div">
             <div class="address-text">Address:</div>
@@ -50,13 +57,10 @@
       </div>
     </main>
   </body>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
-    </script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD30OweB_y7vI138OljGi5O9qGaZptov_4&callback=initMap&v=weekly"
-      defer>
-    </script>
-    <script src="../index.js"></script>
-    
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=[ENTER_API_KEY]&callback=initMap&v=weekly"
+    defer
+  ></script>
+  <script src="../index.js"></script>
 </html>
-

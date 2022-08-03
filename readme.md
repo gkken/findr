@@ -1,68 +1,62 @@
-# findr
-findr like grindr but not at all.
+# Findr - Petrol Station Finder
 
-## About the project
-Inspired by grindr, we want to make it easier for everyone to pump their gas!
+Findr is an Australian-based petrol station finder with a dating app theme. Findr shows you petrol stations within the map viewport and locates the 5 nearest petrol stations from your location.
 
-## Built with
-- Node.js
-- Express JS
-- Google Maps API
+## Demo
+
+![findr demo](./findrDemo.gif)
+
+## Features
+
+- **Single stations near you**: Shows 5 nearest petrol stations from your location, which self-updates if location changes
+- **Current Location**: Shows the current address, latitude and longitude, which self-updates when location changes
+- **Markers**: Markers shows the locations of the petrol stations and are color-coordinated and labeled based on the owner
+- **Marker optimsation**: Markers are optimised to be added only if within map viewport, and deleted if otherwise
+- **Pump of the day**: A spotlight that presents a random petrol station. Click on the name to be brought to the location of the petrol station
+- **Stats**: Displays the total number of petrol station and a breakdown by owner
 
 ## Getting started
-clone the file get express and Google Maps API
 
-## Usage
-Click and drag to find the nearest petrol stations
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+## Installing
+
+_Note: You need to have [Node.js](https://nodejs.dev/) installed._
 
 1. Get a Google API Key at https://console.cloud.google.com/apis/credentials
 
 2. Clone the repo
-```
-git clone https://git.generalassemb.ly/gkken/git-gods.git
-```
 
-3. Install NPM packages
-```
-npm install express 
-```
+   ```
+   git clone https://github.com/gkken/findr
+   ```
+
+3. Install dependancies
+
+   ```
+   npm install
+   ```
 
 4. Enter your API key in index.html
-```html
-<script
-    src="https://maps.googleapis.com/maps/api/js?key=API-KEY-HERE&callback=initMap&v=weekly"
-    defer>
-</script>
-```
+   ```html
+   <script
+     src="https://maps.googleapis.com/maps/api/js?key=[ENTER_API_KEY]&callback=initMap&v=weekly"
+     defer
+   ></script>
+   ```
 
-## Contributions
-Thank you to all that help with the code.
+## Built with
 
-####Gitlord - Ken
-
-#####Gitpeasant - Aiching
-#####Gitpeasant - Edmund
-#####Gitpeasant - Foongyuan
-#####Gitpeasant - Nuraiman
+- [Node.js](https://nodejs.dev/)
+- [Express.js](https://expressjs.com/) - Backend framework
+- [node-postgres](https://github.com/brianc/node-postgres) - PostgreSQL client for Node.js
+- Google Maps API
 
 ## Acknowledgements
 
-Copyright (c) [2022] [git-gods]
+Thank you to my fellow teammates for their contribution to the codebase:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+- Aiching
+- Edmund
+- Foongyuan
+- Nuraiman
